@@ -1,0 +1,51 @@
+{
+  "name": "@squareboat/nest-mailman",
+  "version": "0.0.4",
+  "description": "Super easy mailing client for NestJS 💿💾",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "keywords": [
+    "nestjs-mailman",
+    "nestjs-mail",
+    "nestjs-mailing"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/squareboat/nest-mailman.git"
+  },
+  "bugs": {
+    "url": "https://github.com/squareboat/nest-mailman/issues"
+  },
+  "homepage": "https://github.com/squareboat/nest-mailman",
+  "author": "Vinayak Sarawagi <vinayaksarawagi25@gmail.com>",
+  "private": false,
+  "license": "MIT",
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.json",
+    "format": "prettier --write \"**/*.ts\"",
+    "lint": "eslint 'lib/**/*.ts' --fix",
+    "prepublish:npm": "npm run build",
+    "publish:npm": "npm publish --access public",
+    "prepublish:next": "npm run build",
+    "publish:next": "npm publish --access public --tag next",
+    "test:e2e": "jest --config ./tests/jest-e2e.json --runInBand",
+    "test:e2e:dev": "jest --config ./tests/jest-e2e.json --runInBand --watch"
+  },
+  "devDependencies": {
+    "@nestjs/common": "^7.4.2",
+    "@nestjs/core": "^7.4.2",
+    "@types/bull": "^3.13.0",
+    "@types/nodemailer": "^6.4.0",
+    "typescript": "^3.9.7"
+  },
+  "dependencies": {
+    "handlebars": "^4.7.6",
+    "nodemailer": "^6.4.8",
+    "@nestjs/bull": "^0.1.1",
+    "bull": "^3.14.0"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^6.7.0 || ^7.0.0",
+    "@nestjs/core": "^6.7.0 || ^7.0.0"
+  }
+}
