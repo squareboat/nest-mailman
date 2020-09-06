@@ -16,7 +16,7 @@ export class MailmanService {
   private static queueProvider: any;
 
   constructor(
-    @Inject(map.MAILABLE_OPTIONS) private options: MailmanOptions,
+    @Inject(map.MAILABLE_OPTIONS) options: MailmanOptions,
     @InjectQueue(MAILMAN_QUEUE) queueProvider: Queue
   ) {
     MailmanService.options = options;
