@@ -1,13 +1,13 @@
-import { map } from './provider.map';
-import * as nodemailer from 'nodemailer';
-import { Injectable, Inject } from '@nestjs/common';
-import { MailmanOptions } from './interfaces';
-import * as Handlebars from 'handlebars';
-import { readFileSync } from 'fs';
-import path = require('path');
-import { Queue } from 'bull';
-import { InjectQueue } from '@nestjs/bull';
-import { MAILMAN_QUEUE, SEND_MAIL } from './constants';
+import { map } from "./provider.map";
+import * as nodemailer from "nodemailer";
+import { Injectable, Inject } from "@nestjs/common";
+import { MailmanOptions } from "./interfaces";
+import * as Handlebars from "handlebars";
+import { readFileSync } from "fs";
+import path = require("path");
+import { Queue } from "bull";
+import { InjectQueue } from "@nestjs/bull";
+import { MAILMAN_QUEUE, SEND_MAIL } from "./constants";
 
 @Injectable()
 export class MailmanService {
@@ -17,7 +17,7 @@ export class MailmanService {
 
   constructor(
     @Inject(map.MAILABLE_OPTIONS) private options: MailmanOptions,
-    @InjectQueue(MAILMAN_QUEUE) queueProvider: Queue,
+    @InjectQueue(MAILMAN_QUEUE) queueProvider: Queue
   ) {
     MailmanService.options = options;
     MailmanService.queueProvider = queueProvider;
@@ -30,8 +30,12 @@ export class MailmanService {
           pass: options.password,
         },
       },
-      { from: options.from },
+      { from: options.from }
     );
+  }
+
+  static getConfig(): MailmanOptions {
+    return MailmanService.options;
   }
 
   static queue(options: Record<string, any>) {
@@ -40,15 +44,32 @@ export class MailmanService {
 
   static async send(options: Record<string, any>) {
     await MailmanService.transporter.sendMail({
-      html: this.compileTemplate(options.template, options.payload),
+      html: this.compileTemplate({
+        view: options.view,
+        payload: options.payload,
+        template: options.template,
+      }),
       to: options.recepient,
       subject: options.subject,
     });
   }
 
-  static compileTemplate(template: string, payload: Record<string, any>): any {
+  static compileTemplate({
+    view,
+    payload,
+    template,
+  }: {
+    view: string;
+    payload: object;
+    template: string;
+  }): string {
     const templateCompiler = Handlebars.compile(
-      readFileSync(path.join(MailmanService.options.path, template), 'utf-8'),
+      view
+        ? readFileSync(
+            path.join(MailmanService.getConfig().path, view),
+            "utf-8"
+          )
+        : template
     );
     return templateCompiler(payload);
   }

@@ -1,8 +1,9 @@
-import { MailmanService } from './service';
+import { MailmanService } from "./service";
 
 export class Mailman {
   private mailSubject: string | undefined;
-  private template: string | undefined;
+  private viewFile: string | undefined;
+  private templateString: string | undefined;
   private recepient: string | Array<string> | undefined;
   private payload?: Record<string, any>;
 
@@ -11,8 +12,14 @@ export class Mailman {
     return this;
   }
 
-  view(template: string, payload?: Record<string, any>): this {
-    this.template = template;
+  view(viewFile: string, payload?: Record<string, any>): this {
+    this.viewFile = viewFile;
+    this.payload = payload;
+    return this;
+  }
+
+  template(template: string, payload?: Record<string, any>): this {
+    this.templateString = template;
     this.payload = payload;
     return this;
   }
@@ -26,7 +33,8 @@ export class Mailman {
     await MailmanService.send({
       recepient: this.recepient,
       payload: this.payload,
-      template: this.template,
+      view: this.viewFile,
+      template: this.templateString,
       subject: this.mailSubject,
     });
   }
@@ -35,7 +43,8 @@ export class Mailman {
     MailmanService.queue({
       recepient: this.recepient,
       payload: this.payload,
-      template: this.template,
+      view: this.viewFile,
+      template: this.templateString,
       subject: this.mailSubject,
     });
   }
