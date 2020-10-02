@@ -12,7 +12,7 @@ import { MAILMAN_QUEUE, SEND_MAIL } from "./constants";
 @Injectable()
 export class MailmanService {
   private static options: MailmanOptions;
-  private static transporter: any;
+  private static transporter: nodemailer.Transporter;
   private static queueProvider: any;
 
   constructor(
@@ -49,7 +49,10 @@ export class MailmanService {
         payload: options.payload,
         template: options.template,
       }),
+      bcc: options.bcc,
+      cc: options.cc,
       to: options.recepient,
+      attachments: options.attachments,
       subject: options.subject,
     });
   }

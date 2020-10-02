@@ -6,9 +6,27 @@ export class Mailman {
   private templateString: string | undefined;
   private recepient: string | Array<string> | undefined;
   private payload?: Record<string, any>;
+  private bccRecepient: string | Array<string> | undefined;
+  private ccRecepient: string | Array<string> | undefined;
+  private mailAttachments: any;
 
   to(email: string | Array<string>): this {
     this.recepient = email;
+    return this;
+  }
+
+  bcc(email: string | Array<string>): this {
+    this.bccRecepient = email;
+    return this;
+  }
+
+  cc(email: string | Array<string>): this {
+    this.ccRecepient = email;
+    return this;
+  }
+
+  addAttachment(attachment: any): this {
+    this.mailAttachments = attachment;
     return this;
   }
 
@@ -36,6 +54,9 @@ export class Mailman {
       view: this.viewFile,
       template: this.templateString,
       subject: this.mailSubject,
+      bcc: this.bccRecepient,
+      cc: this.ccRecepient,
+      attachments: this.mailAttachments,
     });
   }
 
