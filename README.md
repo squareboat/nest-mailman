@@ -1,6 +1,7 @@
 # Nest Mailman
 
-A simplem easy-to-use mailing client for NestJS Applications.
+A simple mail transporter. Packed with a beautiful programmatic mail builder.
+
 
 ### Features
 
