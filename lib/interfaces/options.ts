@@ -6,7 +6,7 @@ export interface MailmanOptions {
   username: string;
   password: string;
   from: string;
-  path: string;
+  path?: string;
 }
 
 export interface MailmanOptionsFactory {
@@ -20,3 +20,10 @@ export interface MailmanAsyncOptions extends Pick<ModuleMetadata, "imports"> {
   useFactory?: (...args: any[]) => Promise<MailmanOptions> | MailmanOptions;
   inject?: any[];
 }
+
+export interface MailData {
+  subject?: string;
+  html: string;
+}
+
+export type MailType = "RAW" | "VIEW_BASED" | "GENERIC";

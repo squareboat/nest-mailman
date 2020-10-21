@@ -1,13 +1,11 @@
 import { map } from "./provider.map";
 import * as nodemailer from "nodemailer";
 import { Injectable, Inject } from "@nestjs/common";
-import { MailmanOptions } from "./interfaces";
-import * as Handlebars from "handlebars";
-import { readFileSync } from "fs";
-import path = require("path");
+import { MailmanOptions, MailData } from "./interfaces";
 import { Queue } from "bull";
 import { InjectQueue } from "@nestjs/bull";
 import { MAILMAN_QUEUE, SEND_MAIL } from "./constants";
+import { MailMessage } from "./message";
 
 @Injectable()
 export class MailmanService {
@@ -25,10 +23,7 @@ export class MailmanService {
       {
         host: options.host,
         port: +options.port,
-        auth: {
-          user: options.username,
-          pass: options.password,
-        },
+        auth: { user: options.username, pass: options.password },
       },
       { from: options.from }
     );
@@ -38,39 +33,24 @@ export class MailmanService {
     return MailmanService.options;
   }
 
-  static queue(options: Record<string, any>) {
-    MailmanService.queueProvider.add(SEND_MAIL, options);
-  }
-
-  static async send(options: Record<string, any>) {
-    await MailmanService.transporter.sendMail({
-      html: this.compileTemplate({
-        view: options.view,
-        payload: options.payload,
-        template: options.template,
-      }),
-      to: options.recepient,
-      subject: options.subject,
+  static queue(options: { receipents: string | string[]; mail: MailMessage }) {
+    const mailData: MailData = options.mail.getMailData();
+    MailmanService.queueProvider.add(SEND_MAIL, {
+      html: mailData.html,
+      to: options.receipents,
+      subject: mailData.subject,
     });
   }
 
-  static compileTemplate({
-    view,
-    payload,
-    template,
-  }: {
-    view: string;
-    payload: object;
-    template: string;
-  }): string {
-    const templateCompiler = Handlebars.compile(
-      view
-        ? readFileSync(
-            path.join(MailmanService.getConfig().path, view),
-            "utf-8"
-          )
-        : template
-    );
-    return templateCompiler(payload);
+  static async send(options: {
+    receipents: string | string[];
+    mail: MailMessage;
+  }) {
+    const mailData: MailData = options.mail.getMailData();
+    await MailmanService.transporter.sendMail({
+      html: mailData.html,
+      to: options.receipents,
+      subject: mailData.subject,
+    });
   }
 }
