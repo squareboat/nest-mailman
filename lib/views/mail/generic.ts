@@ -1,4 +1,4 @@
-{{#*inline "greetingPartial"}}
+export const GENERIC_VIEW = `{{#*inline "greetingPartial"}}
 <h3>{{ text }}</h3>
 {{/inline}}
 
@@ -50,4 +50,4 @@
   {{/with}}
   {{/if}}
   {{/each}}
-</body>
+</body>`;

@@ -1,4 +1,4 @@
-import { ModuleMetadata, Type } from '@nestjs/common/interfaces';
+import { ModuleMetadata, Type } from "@nestjs/common/interfaces";
 
 export interface MailmanOptions {
   host: string;
@@ -6,14 +6,14 @@ export interface MailmanOptions {
   username: string;
   password: string;
   from: string;
-  path: string;
+  path?: string;
 }
 
 export interface MailmanOptionsFactory {
   createMailmanOptions(): Promise<MailmanOptions> | MailmanOptions;
 }
 
-export interface MailmanAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
+export interface MailmanAsyncOptions extends Pick<ModuleMetadata, "imports"> {
   name?: string;
   useExisting?: Type<MailmanOptions>;
   useClass?: Type<MailmanOptionsFactory>;
@@ -21,13 +21,9 @@ export interface MailmanAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
   inject?: any[];
 }
 
-export type Recipient = string | Array<string>;
-export type Payload = Record<string, any>;
-
 export interface MailData {
-  recepient?: Recipient;
   subject?: string;
   html: string;
 }
 
-export type MailType = 'RAW' | 'VIEW_BASED' | 'GENERIC';
+export type MailType = "RAW" | "VIEW_BASED" | "GENERIC";
