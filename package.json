@@ -5,9 +5,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "keywords": [
-    "nestjs-mailman",
     "nestjs-mail",
-    "nestjs-mailing"
+    "nestjs-mailing",
+    "nestjs-mailer",
+    "nestjs-mailman"
   ],
   "repository": {
     "type": "git",

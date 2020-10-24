@@ -1,13 +1,14 @@
 # Nest Mailman
 
-A simplem easy-to-use mailing client for NestJS Applications.
+📮 The mailer package for your NestJS Applications.
 
 ### Features
 
 - ✅ Supports Handlebar templating
-- ✅ In-built Queue out of the box
-
-For complete documentation, head over to [our site](https://opensource.squareboat.com/nest-eyewitness).
+- ✅ Comes with built-in template to quickly send mails without creating templates.
+- ✅ Uses nodemailer internally
+  
+For complete documentation, head over to [our site](https://opensource.squareboat.com/nest-mailman).
 
 ---
 

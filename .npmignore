@@ -9,7 +9,7 @@ tsconfig.json
 
 # github
 .github
-CONTRIBUTING.md
+CONTRIBUTING.MD
 
 # misc
 .commitlintrc.json
