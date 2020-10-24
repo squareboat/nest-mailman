@@ -14,7 +14,7 @@ export class MailmanService {
     MailmanService.transporter = nodemailer.createTransport(
       {
         host: options.host,
-        port: +options.port,
+        port: options.port,
         auth: { user: options.username, pass: options.password },
       },
       { from: options.from }
@@ -26,11 +26,14 @@ export class MailmanService {
   }
 
   static async send(options: {
+    sender: string;
     receipents: string | string[];
     mail: MailMessage;
   }) {
+    const config = MailmanService.options;
     const mailData: MailData = options.mail.getMailData();
     await MailmanService.transporter.sendMail({
+      from: options.sender || config.from,
       html: mailData.html,
       to: options.receipents,
       subject: mailData.subject,

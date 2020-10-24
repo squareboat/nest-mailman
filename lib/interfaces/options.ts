@@ -2,7 +2,7 @@ import { ModuleMetadata, Type } from "@nestjs/common/interfaces";
 
 export interface MailmanOptions {
   host: string;
-  port: string;
+  port: number;
   username: string;
   password: string;
   from: string;
