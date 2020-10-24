@@ -14,7 +14,7 @@ export class MailMessage {
   private mailType: MailType;
   private compiledHtml: string;
 
-  private constructor() {
+  constructor() {
     this.compiledHtml = "";
     this.mailType = RAW_MAIL;
   }
@@ -139,5 +139,13 @@ export class MailMessage {
    */
   getMailData(): MailData {
     return { subject: this.mailSubject, html: this._compileTemplate() };
+  }
+
+  /**
+   * Render the email template.
+   * Returns the complete html of the mail.
+   */
+  render(): string {
+    return this._compileTemplate();
   }
 }
