@@ -23,11 +23,4 @@ export class Mailman {
       receipents: this.receipents,
     });
   }
-
-  queue(mail: MailMessage) {
-    return MailmanService.queue({
-      mail,
-      receipents: this.receipents,
-    });
-  }
 }
