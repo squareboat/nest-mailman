@@ -119,7 +119,10 @@ export class MailMessage {
     if (this.mailType === VIEW_BASED_MAIL && this.viewFile) {
       const config = MailmanService.getConfig();
       const template = Handlebars.compile(
-        readFileSync(path.join(config.path || "", this.viewFile), "utf-8")
+        readFileSync(
+          path.join(config.path || "", `${this.viewFile}.hbs`),
+          "utf-8"
+        )
       );
       this.compiledHtml = template(this.payload);
       return this.compiledHtml;
