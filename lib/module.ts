@@ -1,26 +1,13 @@
-import { map } from './provider.map';
-import { Module, DynamicModule, Provider, Type } from '@nestjs/common';
-import { MailmanService } from './service';
+import { map } from "./provider.map";
+import { Module, DynamicModule, Provider, Type } from "@nestjs/common";
+import { MailmanService } from "./service";
 import {
   MailmanOptions,
   MailmanAsyncOptions,
   MailmanOptionsFactory,
-} from './interfaces';
-import { BullModule } from '@nestjs/bull';
-import { MAILMAN_QUEUE } from './constants';
-import { MailConsumer } from './queue/consumer';
+} from "./interfaces";
 
-@Module({
-  imports: [
-    BullModule.registerQueue({
-      name: MAILMAN_QUEUE,
-      defaultJobOptions: {
-        removeOnComplete: true,
-        removeOnFail: true,
-      },
-    }),
-  ],
-})
+@Module({})
 export class MailmanModule {
   /**
    * Register options
@@ -32,7 +19,6 @@ export class MailmanModule {
       module: MailmanModule,
       providers: [
         MailmanService,
-        MailConsumer,
         {
           provide: map.MAILABLE_OPTIONS,
           useValue: options,
@@ -48,16 +34,12 @@ export class MailmanModule {
     return {
       global: true,
       module: MailmanModule,
-      providers: [
-        MailConsumer,
-        MailmanService,
-        this.createStorageOptionsProvider(options),
-      ],
+      providers: [MailmanService, this.createStorageOptionsProvider(options)],
     };
   }
 
   private static createStorageOptionsProvider(
-    options: MailmanAsyncOptions,
+    options: MailmanAsyncOptions
   ): Provider {
     if (options.useFactory) {
       return {

@@ -1,13 +1,16 @@
 {
   "name": "@squareboat/nest-mailman",
-  "version": "0.1.1",
-  "description": "Super easy mailing client for NestJS 💿💾",
+  "version": "0.1.9",
+  "description": "📮 The mailer package for your NestJS Applications",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "keywords": [
-    "nestjs-mailman",
+    "nestjs",
+    "nodemailer",
     "nestjs-mail",
-    "nestjs-mailing"
+    "nestjs-mailing",
+    "nestjs-mailer",
+    "nestjs-mailman"
   ],
   "repository": {
     "type": "git",
@@ -34,15 +37,12 @@
   "devDependencies": {
     "@nestjs/common": "^7.4.2",
     "@nestjs/core": "^7.4.2",
-    "@types/bull": "^3.13.0",
     "@types/nodemailer": "^6.4.0",
     "typescript": "^3.9.7"
   },
   "dependencies": {
     "handlebars": "^4.7.6",
-    "nodemailer": "^6.4.8",
-    "@nestjs/bull": "^0.1.1",
-    "bull": "^3.14.0"
+    "nodemailer": "^6.4.8"
   },
   "peerDependencies": {
     "@nestjs/common": "^6.7.0 || ^7.0.0",

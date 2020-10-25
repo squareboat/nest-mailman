@@ -5,6 +5,7 @@ import { GENERIC_MAIL, RAW_MAIL, VIEW_BASED_MAIL } from "./constants";
 import { MailData, MailType } from "./interfaces";
 import { MailmanService } from "./service";
 import { GENERIC_VIEW } from "./views/mail";
+import { Attachment } from "nodemailer/lib/mailer";
 
 export class MailMessage {
   private mailSubject?: string;
@@ -13,8 +14,10 @@ export class MailMessage {
   private payload?: Record<string, any>;
   private mailType: MailType;
   private compiledHtml: string;
+  private attachments: Record<string, Attachment>;
 
-  private constructor() {
+  constructor() {
+    this.attachments = {};
     this.compiledHtml = "";
     this.mailType = RAW_MAIL;
   }
@@ -56,6 +59,15 @@ export class MailMessage {
     this.mailType = RAW_MAIL;
     this.templateString = template;
     this.payload = payload;
+    return this;
+  }
+
+  /**
+   * Add attachment to the mail
+   * @param greeting
+   */
+  attach(filename: string, content: Omit<Attachment, "filename">): this {
+    this.attachments[filename] = { ...content, filename };
     return this;
   }
 
@@ -119,7 +131,10 @@ export class MailMessage {
     if (this.mailType === VIEW_BASED_MAIL && this.viewFile) {
       const config = MailmanService.getConfig();
       const template = Handlebars.compile(
-        readFileSync(path.join(config.path || "", this.viewFile), "utf-8")
+        readFileSync(
+          path.join(config.path || "", `${this.viewFile}.hbs`),
+          "utf-8"
+        )
       );
       this.compiledHtml = template(this.payload);
       return this.compiledHtml;
@@ -138,6 +153,22 @@ export class MailMessage {
    * Returns the maildata payload
    */
   getMailData(): MailData {
-    return { subject: this.mailSubject, html: this._compileTemplate() };
+    if (typeof (this as any).handle === "function") {
+      (this as any)["handle"]();
+    }
+
+    return {
+      subject: this.mailSubject,
+      html: this._compileTemplate(),
+      attachments: Object.values(this.attachments),
+    };
+  }
+
+  /**
+   * Render the email template.
+   * Returns the complete html of the mail.
+   */
+  render(): string {
+    return this._compileTemplate();
   }
 }
