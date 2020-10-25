@@ -153,6 +153,10 @@ export class MailMessage {
    * Returns the maildata payload
    */
   getMailData(): MailData {
+    if (typeof (this as any).handle === "function") {
+      (this as any)["handle"]();
+    }
+
     return {
       subject: this.mailSubject,
       html: this._compileTemplate(),
