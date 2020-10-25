@@ -14,12 +14,16 @@ export class Mailman {
     this.bccReceipents = "";
   }
 
+  /**
+   * Returns new instance
+   */
   static init() {
     return new Mailman();
   }
 
   /**
-   *
+   * `FROM` in email address.
+   * Use this method to override the `from` address provided in configuration.
    * @param sender
    */
   from(sender: string): this {
@@ -28,7 +32,7 @@ export class Mailman {
   }
 
   /**
-   *
+   * `TO` in email address
    * @param receipents
    */
   to(receipents: string | string[]): this {
@@ -37,19 +41,27 @@ export class Mailman {
   }
 
   /**
-   *
+   * `CC` in email addres
    * @param ccreceipents
    */
-  cc(ccreceipents: string | string[]): this {
-    this.ccReceipents = ccreceipents;
+  cc(ccReceipents: string | string[]): this {
+    this.ccReceipents = ccReceipents;
     return this;
   }
 
-  bcc(bccreceipents: string | string[]): this {
-    this.bccReceipents = [];
+  /**
+   * `BCC` in email address
+   * @param bccReceipents
+   */
+  bcc(bccReceipents: string | string[]): this {
+    this.bccReceipents = bccReceipents;
     return this;
   }
 
+  /**
+   * Send mail
+   * @param mail
+   */
   send(mail: MailMessage) {
     return MailmanService.send({
       mail,
