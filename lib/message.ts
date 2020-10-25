@@ -5,6 +5,7 @@ import { GENERIC_MAIL, RAW_MAIL, VIEW_BASED_MAIL } from "./constants";
 import { MailData, MailType } from "./interfaces";
 import { MailmanService } from "./service";
 import { GENERIC_VIEW } from "./views/mail";
+import { Attachment } from "nodemailer/lib/mailer";
 
 export class MailMessage {
   private mailSubject?: string;
@@ -13,8 +14,10 @@ export class MailMessage {
   private payload?: Record<string, any>;
   private mailType: MailType;
   private compiledHtml: string;
+  private attachments: Record<string, Attachment>;
 
   constructor() {
+    this.attachments = {};
     this.compiledHtml = "";
     this.mailType = RAW_MAIL;
   }
@@ -56,6 +59,15 @@ export class MailMessage {
     this.mailType = RAW_MAIL;
     this.templateString = template;
     this.payload = payload;
+    return this;
+  }
+
+  /**
+   * Add attachment to the mail
+   * @param greeting
+   */
+  attach(filename: string, content: Omit<Attachment, "filename">): this {
+    this.attachments[filename] = { ...content, filename };
     return this;
   }
 
@@ -141,7 +153,11 @@ export class MailMessage {
    * Returns the maildata payload
    */
   getMailData(): MailData {
-    return { subject: this.mailSubject, html: this._compileTemplate() };
+    return {
+      subject: this.mailSubject,
+      html: this._compileTemplate(),
+      attachments: Object.values(this.attachments),
+    };
   }
 
   /**

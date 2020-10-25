@@ -1,4 +1,6 @@
 import { ModuleMetadata, Type } from "@nestjs/common/interfaces";
+import { Attachment } from "nodemailer/lib/mailer";
+import { MailMessage } from "../message";
 
 export interface MailmanOptions {
   host: string;
@@ -24,6 +26,15 @@ export interface MailmanAsyncOptions extends Pick<ModuleMetadata, "imports"> {
 export interface MailData {
   subject?: string;
   html: string;
+  attachments: Attachment[];
+}
+
+export interface SendMailOptions {
+  sender: string;
+  mail: MailMessage;
+  cc: string | string[];
+  bcc: string | string[];
+  receipents: string | string[];
 }
 
 export type MailType = "RAW" | "VIEW_BASED" | "GENERIC";
