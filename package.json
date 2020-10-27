@@ -42,13 +42,13 @@
     "@nestjs/testing": "^7.4.4",
     "@types/nodemailer": "^6.4.0",
     "jest": "^26.6.1",
+    "nodemailer-mock": "^1.5.3",
     "ts-jest": "^26.4.2",
     "typescript": "^3.9.7"
   },
   "dependencies": {
     "handlebars": "^4.7.6",
     "nodemailer": "^6.4.8",
-    "nodemailer-mock": "^1.5.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.6.3"
   },
