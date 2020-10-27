@@ -25,7 +25,6 @@ async function getMailerServiceForOptions(
   const module: TestingModule = await Test.createTestingModule({
     imports: [MailmanModule.register(config)],
     providers: [
-      MailmanService,
       {
         provide: map.MAILABLE_OPTIONS,
         useValue: options,
@@ -59,7 +58,6 @@ describe('MailerService', () => {
           }),
         ],
         providers: [
-          MailmanService,
           {
             provide: map.MAILABLE_OPTIONS,
             useValue: config,
@@ -84,12 +82,12 @@ describe('MailerService', () => {
       mailMessage
         .subject('Testing 1')
         .view('test-plain', { message: 'Hello World' });
-
       mailBody = mailMessage.getMailData();
       sampleMailMessage = mailMessage;
 
       expect(mailBody.subject).toBe('Testing 1');
       expect(mailBody.html).toBe('<p>The message is Hello World</p>');
+      expect(mailMessage.render()).toBe('<p>The message is Hello World</p>');
     });
 
     /** === RAW MAILS === */
@@ -112,10 +110,10 @@ describe('MailerService', () => {
       const mailMessage = MailMessage.init();
       mailMessage
         .subject('Testing 2')
-        .greeting('Hello world!')
-        .line('I saw a little fairy')
-        .line('that was blown away by wind one night')
-        .action('Yeah me too', 'https://and.the.mountains.echoed');
+        .greeting('Hello Sarah,')
+        .line("You've received a new enquiry")
+        .line('Summary: The product looks promising! would love to setup a call to discuss more')
+        .action('View Enquiry', 'https://app.test.in/admin/queries/123');
 
       mailBody = mailMessage.getMailData();
 
@@ -124,7 +122,7 @@ describe('MailerService', () => {
 
     /** TESTS RELATED TO TRANSPORTING MAILs */
     it('should accept mailmessage', async () => {
-      let sentMailData: MailData = { html: '', attachments: [] };
+      let sentMailData = { html: '', attachments: [], from: '' };
 
       jest
         .spyOn(SMTPTransport.prototype, 'send')
@@ -135,12 +133,20 @@ describe('MailerService', () => {
       const mailMan = Mailman.init();
       mailMan
         .to(['hello@gmail.com', 'test@gmail.com'])
-        .from('oveeridden@gmail.com')
         .cc('admin@gmail.com')
         .bcc('admin_desk@gmail.com')
         .send(sampleMailMessage);
 
       expect(sentMailData.html).toBe('<p>The message is Hello World</p>');
+
+      mailMan
+        .to(['hello@gmail.com', 'test@gmail.com'])
+        .from('oveeridden@gmail.com')
+        .cc('admin@gmail.com')
+        .bcc('admin_desk@gmail.com')
+        .send(sampleMailMessage);
+
+      expect(sentMailData.from).toBe('oveeridden@gmail.com')
     });
     /** ===================== */
   });
