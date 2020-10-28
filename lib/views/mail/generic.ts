@@ -2,7 +2,7 @@ export const GENERIC_VIEW = `
 {{#*inline "greetingPartial"}}
 <tr>
 <td align="left" style=
-"font-size:0px;padding:10px 25px;word-break:break-word;">
+"font-size:0px;padding:8px 24px;word-break:break-word;">
   <div style=
   "font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1;text-align:left;color:#0D47A1;">
   <h1>{{text}}</h1>
@@ -14,7 +14,7 @@ export const GENERIC_VIEW = `
 {{#*inline "linePartial"}}
 <tr>
 <td align="left" style=
-"font-size:0px;padding:10px 25px;word-break:break-word;">
+"font-size:0px;padding:8px 24px;word-break:break-word;">
   <div style=
   "font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:18px;line-height:1;text-align:left;color:#000000;">
   <p>{{ text }}</p>
@@ -25,10 +25,10 @@ export const GENERIC_VIEW = `
 
 {{#*inline "actionPartial"}}
 <tr>
-    <td align="center" vertical-align="middle" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+    <td align="center" vertical-align="middle" style="font-size:0px;padding:10px 24px;word-break:break-word;">
         <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
-            <tr><td align="center" bgcolor="#283593" role="presentation" style="border:none;border-radius:3px;cursor:auto;mso-padding-alt:10px 25px;background:#0D47A1;" valign="middle">
-                <a href={{link}} style="display:inline-block;background:#0D47A1;color:#ffffff;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:25px;font-weight:normal;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:10px 25px;mso-padding-alt:0px;border-radius:3px;" target="_blank">
+            <tr><td align="center" bgcolor="#283593" role="presentation" style="border:none;border-radius:4px;cursor:auto;mso-padding-alt:10px 24px;background:#0D47A1;" valign="middle">
+                <a href={{link}} style="display:inline-block;background:#0D47A1;color:#ffffff;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:16px;font-weight:normal;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:10px 24px;mso-padding-alt:0px;border-radius:4px;" target="_blank">
                     {{text}}
                 </a>
             </td></tr>
@@ -38,8 +38,8 @@ export const GENERIC_VIEW = `
 {{/inline}}
 
 {{#*inline "actionFallback"}}
-<div style="background:#ECEFF1;background-color:#ECEFF1;margin:0px auto;max-width:600px;">
-    <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#ECEFF1;background-color:#ECEFF1;width:100%;">
+<div style="background:#f3f3f3;background-color:#f3f3f3;margin:0px auto;max-width:600px;">
+    <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#F3F3F3;background-color:#F3F3F3;width:100%;">
     <tbody>
         <tr><td style="direction:ltr;font-size:0px;padding:20px 0;text-align:center;">
         <!--[if mso | IE]>
@@ -48,10 +48,10 @@ export const GENERIC_VIEW = `
                     <![endif]-->
                     <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
                         <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
-                            <tr><td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                                <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1;text-align:left;color:#000000;">
+                            <tr><td align="left" style="font-size:0px;padding:10px 24px;word-break:break-word;">
+                                <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:14px;line-height:1;text-align:left;color:#000000;">
                                     <p>If you are having trouble clicking the button, copy paste the
-                                        url: {{link}}
+                                        url: <a href={{link}} style="color: #0D47A1;">{{link}}</a>
                                     </p>
                                 </div>
                             </td></tr>
@@ -111,7 +111,7 @@ xmlns:o="urn:schemas-microsoft-com:office:office">
 
     p {
       display: block;
-      margin: 13px 0;
+      margin: 8px 0;
     }
   /*]]>*/
   </style><!--[if mso]>
@@ -154,8 +154,8 @@ xmlns:o="urn:schemas-microsoft-com:office:office">
       <table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600">
         <tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
     <![endif]-->
-            <div style="background:#F5F5F5;background-color:#F5F5F5;margin:0px auto;max-width:600px;">
-                <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#F5F5F5;background-color:#F5F5F5;width:100%;">
+            <div style="background:#fbfbfb;background-color:#fbfbfb;margin:0px auto;max-width:600px;">
+                <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#FBFBFB;background-color:#FBFBFB;width:100%;">
                     <tbody>
                         <tr>
                         <td style="direction:ltr;font-size:0px;padding:20px 0;text-align:center;">
