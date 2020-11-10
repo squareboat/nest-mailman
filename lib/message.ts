@@ -1,11 +1,14 @@
 import { readFileSync } from "fs";
 import * as path from "path";
+
 import * as Handlebars from "handlebars";
+import { Attachment } from "nodemailer/lib/mailer";
+
 import { GENERIC_MAIL, RAW_MAIL, VIEW_BASED_MAIL } from "./constants";
 import { MailData, MailType } from "./interfaces";
 import { MailmanService } from "./service";
 import { GENERIC_VIEW } from "./views/mail";
-import { Attachment } from "nodemailer/lib/mailer";
+import { getCompiledHtml } from "./utils/fileCompiler";
 
 export class MailMessage {
   private mailSubject?: string;
@@ -20,6 +23,7 @@ export class MailMessage {
     this.attachments = {};
     this.compiledHtml = "";
     this.mailType = RAW_MAIL;
+    Handlebars.registerHelper('markdown', require('helper-markdown'));
   }
 
   /**
