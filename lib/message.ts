@@ -1,6 +1,3 @@
-import { readFileSync } from "fs";
-import * as path from "path";
-
 import * as Handlebars from "handlebars";
 import { Attachment } from "nodemailer/lib/mailer";
 
@@ -134,13 +131,7 @@ export class MailMessage {
 
     if (this.mailType === VIEW_BASED_MAIL && this.viewFile) {
       const config = MailmanService.getConfig();
-      const template = Handlebars.compile(
-        readFileSync(
-          path.join(config.path || "", `${this.viewFile}.hbs`),
-          "utf-8"
-        )
-      );
-      this.compiledHtml = template(this.payload);
+      this.compiledHtml = getCompiledHtml(this.viewFile, config.path!, this.payload);
       return this.compiledHtml;
     }
 
