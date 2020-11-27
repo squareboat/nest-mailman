@@ -40,6 +40,7 @@
     "@nestjs/common": "^7.4.2",
     "@nestjs/core": "^7.4.2",
     "@nestjs/testing": "^7.4.4",
+    "@types/mjml": "^4.0.4",
     "@types/nodemailer": "^6.4.0",
     "jest": "^26.6.1",
     "nodemailer-mock": "^1.5.3",
@@ -49,6 +50,7 @@
   "dependencies": {
     "handlebars": "^4.7.6",
     "helper-markdown": "^1.0.0",
+    "mjml": "^4.7.1",
     "nodemailer": "^6.4.8"
   },
   "peerDependencies": {
