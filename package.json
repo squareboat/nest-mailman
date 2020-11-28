@@ -51,7 +51,9 @@
     "handlebars": "^4.7.6",
     "helper-markdown": "^1.0.0",
     "mjml": "^4.7.1",
-    "nodemailer": "^6.4.8"
+    "nodemailer": "^6.4.8",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^6.6.3"
   },
   "peerDependencies": {
     "@nestjs/common": "^6.7.0 || ^7.0.0",
