@@ -1,11 +1,11 @@
-import * as Handlebars from "handlebars";
-import { Attachment } from "nodemailer/lib/mailer";
+import * as Handlebars from 'handlebars';
+import { Attachment } from 'nodemailer/lib/mailer';
 
-import { GENERIC_MAIL, RAW_MAIL, VIEW_BASED_MAIL } from "./constants";
-import { MailData, MailType } from "./interfaces";
-import { MailmanService } from "./service";
-import { GENERIC_VIEW } from "./views/mail";
-import { getCompiledHtml } from "./utils/fileCompiler";
+import { GENERIC_MAIL, RAW_MAIL, VIEW_BASED_MAIL } from './constants';
+import { MailData, MailType } from './interfaces';
+import { MailmanService } from './service';
+import { GENERIC_VIEW } from './views/mail';
+import { getCompiledHtml } from './utils/fileCompiler';
 
 export class MailMessage {
   private mailSubject?: string;
@@ -18,7 +18,7 @@ export class MailMessage {
 
   constructor() {
     this.attachments = {};
-    this.compiledHtml = "";
+    this.compiledHtml = '';
     this.mailType = RAW_MAIL;
     Handlebars.registerHelper('markdown', require('helper-markdown'));
   }
@@ -67,7 +67,7 @@ export class MailMessage {
    * Add attachment to the mail
    * @param greeting
    */
-  attach(filename: string, content: Omit<Attachment, "filename">): this {
+  attach(filename: string, content: Omit<Attachment, 'filename'>): this {
     this.attachments[filename] = { ...content, filename };
     return this;
   }
@@ -131,8 +131,20 @@ export class MailMessage {
 
     if (this.mailType === VIEW_BASED_MAIL && this.viewFile) {
       const config = MailmanService.getConfig();
-      this.compiledHtml = getCompiledHtml(this.viewFile, config.path!, this.payload);
-      return this.compiledHtml;
+      if (config.path) {
+        const configOptions = {
+          configPath: config.path,
+          mjml: config.mjml,
+        };
+        this.compiledHtml = getCompiledHtml(
+          this.viewFile,
+          configOptions,
+          this.payload
+        );
+        return this.compiledHtml;
+      } else {
+        throw new Error('Bad Request');
+      }
     }
 
     if (this.mailType === RAW_MAIL && this.templateString) {
@@ -148,8 +160,8 @@ export class MailMessage {
    * Returns the maildata payload
    */
   getMailData(): MailData {
-    if (typeof (this as any).handle === "function") {
-      (this as any)["handle"]();
+    if (typeof (this as any).handle === 'function') {
+      (this as any)['handle']();
     }
 
     return {
