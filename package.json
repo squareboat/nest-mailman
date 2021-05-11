@@ -1,6 +1,6 @@
 {
   "name": "@squareboat/nest-mailman",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "description": "📮 The mailer package for your NestJS Applications",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
