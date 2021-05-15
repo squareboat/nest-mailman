@@ -8,7 +8,7 @@
 - ✅ Comes with built-in template to quickly send mails without creating templates.
 - ✅ Uses nodemailer internally
   
-For complete documentation, head over to [our site](https://opensource.squareboat.com/nest-mailman).
+For complete documentation, head over to [our site](https://squareboat.com/open-source/nest-mailman/).
 
 ---
 
