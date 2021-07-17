@@ -1,6 +1,7 @@
-import { readFileSync } from 'fs';
 import * as path from 'path';
-import * as Handlebars from 'handlebars';
+import * as ejs from 'ejs';
+
+const md = require('markdown-it')();
 
 import { CompilerOptions, MailCompiler } from './../interfaces';
 
@@ -13,10 +14,10 @@ export class MarkdownCompiler implements MailCompiler {
     this.compilerOptions = compilerOptions;
   }
 
-  compileMail(options: Record<string, any>) {
-    const template = Handlebars.compile(
-      '{{#markdown}}' + readFileSync(this.filePath, 'utf-8') + '{{/markdown}}'
-    );
-    return template(options);
+  async compileMail(options: Record<string, any>) {
+    const compiledHtml = await ejs.renderFile(this.filePath, options);
+
+    const template = md.render(compiledHtml);
+    return template;
   }
 }

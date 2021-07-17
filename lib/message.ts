@@ -1,11 +1,12 @@
-import * as Handlebars from 'handlebars';
+import ejs from 'ejs';
 import { Attachment } from 'nodemailer/lib/mailer';
+import * as path from 'path';
 
 import { GENERIC_MAIL, RAW_MAIL, VIEW_BASED_MAIL } from './constants';
 import { MailData, MailType } from './interfaces';
 import { MailmanService } from './service';
-import { GENERIC_VIEW } from './views/mail';
 import { getCompiledHtml } from './utils/fileCompiler';
+import { EJSCompiler } from './compilers';
 
 export class MailMessage {
   private mailSubject?: string;
@@ -20,7 +21,6 @@ export class MailMessage {
     this.attachments = {};
     this.compiledHtml = '';
     this.mailType = RAW_MAIL;
-    Handlebars.registerHelper('markdown', require('helper-markdown'));
   }
 
   /**
@@ -120,12 +120,13 @@ export class MailMessage {
   /**
    * Method to compile templates
    */
-  private _compileTemplate(): string {
+  private async _compileTemplate(): Promise<string> {
     if (this.compiledHtml) return this.compiledHtml;
 
     if (this.mailType === GENERIC_MAIL) {
-      const template = Handlebars.compile(GENERIC_VIEW);
-      this.compiledHtml = template(this.payload);
+      // Sets the resource path to library's views/mails directory, to render includes
+      const mailCompiler = new EJSCompiler('generic', { configPath: path.join(__dirname, 'views/mail') });
+      this.compiledHtml = await mailCompiler.compileMail(this.payload || {});
       return this.compiledHtml;
     }
 
@@ -136,7 +137,7 @@ export class MailMessage {
           configPath: config.path,
           mjml: config.mjml,
         };
-        this.compiledHtml = getCompiledHtml(
+        this.compiledHtml = await getCompiledHtml(
           this.viewFile,
           configOptions,
           this.payload
@@ -148,7 +149,7 @@ export class MailMessage {
     }
 
     if (this.mailType === RAW_MAIL && this.templateString) {
-      const template = Handlebars.compile(this.templateString);
+      const template = ejs.compile(this.templateString);
       this.compiledHtml = template(this.payload);
       return this.compiledHtml;
     }
@@ -159,14 +160,15 @@ export class MailMessage {
   /**
    * Returns the maildata payload
    */
-  getMailData(): MailData {
+  async getMailData(): Promise<MailData> {
     if (typeof (this as any).handle === 'function') {
       (this as any)['handle']();
     }
 
+    const html = await this._compileTemplate();
     return {
       subject: this.mailSubject,
-      html: this._compileTemplate(),
+      html,
       attachments: Object.values(this.attachments),
     };
   }
@@ -175,7 +177,7 @@ export class MailMessage {
    * Render the email template.
    * Returns the complete html of the mail.
    */
-  render(): string {
-    return this._compileTemplate();
+  async render(): Promise<string> {
+    return await this._compileTemplate();
   }
 }
