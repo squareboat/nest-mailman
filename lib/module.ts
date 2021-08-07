@@ -34,6 +34,7 @@ export class MailmanModule {
     return {
       global: true,
       module: MailmanModule,
+      imports: options.imports || [],
       providers: [MailmanService, this.createStorageOptionsProvider(options)],
     };
   }
