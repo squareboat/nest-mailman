@@ -9,6 +9,7 @@ export interface MailmanOptions {
   username: string;
   password: string;
   from: string;
+  replyTo?: string;
   path?: string;
   mjml?: MJMLParsingOpts;
 }
@@ -38,6 +39,8 @@ export interface MailData {
 
 export interface SendMailOptions {
   sender: string;
+  replyTo?: string;
+  inReplyTo?: string;
   mail: MailMessage;
   cc: string | string[];
   bcc: string | string[];
