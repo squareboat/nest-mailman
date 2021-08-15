@@ -3,7 +3,13 @@ import { Attachment } from 'nodemailer/lib/mailer';
 import * as path from 'path';
 
 import { GENERIC_MAIL, RAW_MAIL, VIEW_BASED_MAIL } from './constants';
-import { MailData, MailType } from './interfaces';
+import {
+  ActionOptions,
+  SocialLinks,
+  MailData,
+  MailType,
+  TableData,
+} from './interfaces';
 import { MailmanService } from './service';
 import { getCompiledHtml } from './utils/fileCompiler';
 import { EJSCompiler } from './compilers';
@@ -100,15 +106,44 @@ export class MailMessage {
    * @param text
    * @param link
    */
-  action(text: string, link: string): this {
+  action(text: string, link: string, options?: ActionOptions): this {
     this._setGenericMailProperties();
-    this.payload!.genericFields.push({ action: { text, link } });
+    if (this.payload) {
+      this.payload.genericFields.push({
+        action: { text, link, variant: options?.variant },
+      });
+    }
+    if (options && options.fallback && this.payload) {
+      this.payload.fallback = link;
+    }
     return this;
   }
 
   /**
    * ==> Generic Template Method <==
-   * @param greeting
+   * Use this method for adding social links to mail
+   * @param social
+   */
+  social(social: SocialLinks): this {
+    this._setGenericMailProperties();
+    this.payload!.genericFields.push({ social });
+    return this;
+  }
+
+  /**
+   * ==> Generic Template Method <==
+   * Use this method for adding a table to generic mail. First array defines the head and rest, the body.
+   * @param _table
+   */
+  table(_table: TableData): this {
+    this._setGenericMailProperties();
+    this.payload!.genericFields.push({ table: _table });
+    return this;
+  }
+
+  /**
+   * ==> Generic Template Method <==
+   * Sets the mail type to GENERIC_MAIL and adds initial values for genericFields
    */
   private _setGenericMailProperties() {
     this.mailType = GENERIC_MAIL;
@@ -125,7 +160,10 @@ export class MailMessage {
 
     if (this.mailType === GENERIC_MAIL) {
       // Sets the resource path to library's views/mails directory, to render includes
-      const mailCompiler = new EJSCompiler('generic', { configPath: path.join(__dirname, 'views/mail') });
+      const mailCompiler = new EJSCompiler('generic', {
+        configPath: path.join(__dirname, 'views/mail'),
+        mjml: { minify: true },
+      });
       this.compiledHtml = await mailCompiler.compileMail(this.payload || {});
       return this.compiledHtml;
     }
