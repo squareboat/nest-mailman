@@ -1,8 +1,7 @@
-import { map } from "./provider.map";
-import * as nodemailer from "nodemailer";
-import { Injectable, Inject } from "@nestjs/common";
-import { MailmanOptions, MailData, SendMailOptions } from "./interfaces";
-import { MailMessage } from "./message";
+import { map } from './provider.map';
+import * as nodemailer from 'nodemailer';
+import { Injectable, Inject } from '@nestjs/common';
+import { MailmanOptions, MailData, SendMailOptions } from './interfaces';
 
 @Injectable()
 export class MailmanService {
@@ -28,7 +27,7 @@ export class MailmanService {
   static async send(options: SendMailOptions) {
     const config = MailmanService.options;
     const mailData: MailData = await options.mail.getMailData();
-    await MailmanService.transporter.sendMail({
+    const mail: Record<string, any> = {
       to: options.receipents,
       cc: options.cc,
       bcc: options.bcc,
@@ -36,6 +35,13 @@ export class MailmanService {
       html: mailData.html,
       subject: mailData.subject,
       attachments: mailData.attachments,
-    });
+    };
+    if (options.replyTo || config.replyTo) {
+      mail.replyTo = options.replyTo || config.replyTo;
+    }
+    if (options.inReplyTo) {
+      mail.inReplyTo = options.inReplyTo;
+    }
+    await MailmanService.transporter.sendMail(mail);
   }
 }
