@@ -14,6 +14,7 @@ export class MailmanService {
       {
         host: options.host,
         port: options.port,
+        secure: options.port === 465 ? true : false,
         auth: { user: options.username, pass: options.password },
       },
       { from: options.from }
