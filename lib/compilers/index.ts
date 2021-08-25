@@ -1,2 +1,2 @@
-export * from './HandlebarCompiler';
+export * from './EJSCompiler';
 export * from './MarkdownCompiler';

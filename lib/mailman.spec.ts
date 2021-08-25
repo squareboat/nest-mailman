@@ -82,12 +82,14 @@ describe('MailerService', () => {
       mailMessage
         .subject('Testing 1')
         .view('test-plain', { message: 'Hello World' });
-      mailBody = mailMessage.getMailData();
+      mailBody = await mailMessage.getMailData();
       sampleMailMessage = mailMessage;
 
       expect(mailBody.subject).toBe('Testing 1');
       expect(mailBody.html).toBe('<p>The message is Hello World</p>');
-      expect(mailMessage.render()).toBe('<p>The message is Hello World</p>');
+      expect(await mailMessage.render()).toBe(
+        '<p>The message is Hello World</p>'
+      );
     });
 
     /** === RAW MAILS === */
@@ -95,12 +97,18 @@ describe('MailerService', () => {
       let mailBody: MailData;
 
       const mailMessage = MailMessage.init();
-      mailMessage.subject('Testing 2').raw('This is a plain text mail');
+      mailMessage
+        .subject('Testing 2')
+        .raw('<p>This is a plain text mail with content: <%= message %></p>', {
+          message: 'Hello from payload',
+        });
 
-      mailBody = mailMessage.getMailData();
+      mailBody = await mailMessage.getMailData();
 
       expect(mailBody.subject).toBe('Testing 2');
-      expect(mailBody.html).toBe('This is a plain text mail');
+      expect(mailBody.html).toBe(
+        '<p>This is a plain text mail with content: Hello from payload</p>'
+      );
     });
 
     /** === GENERIC MAIL === */
@@ -112,13 +120,17 @@ describe('MailerService', () => {
         .subject('Testing 2')
         .greeting('Hello Sarah,')
         .line("You've received a new enquiry")
-        .line('Summary: The product looks promising! would love to setup a call to discuss more')
+        .line(
+          'Summary: The product looks promising! would love to setup a call to discuss more'
+        )
         .action('View Enquiry', 'https://app.test.in/admin/queries/123');
 
-      mailBody = mailMessage.getMailData();
+      mailBody = await mailMessage.getMailData();
 
       expect(mailBody.subject).toBe('Testing 2');
     });
+
+    /** ==== ACCEPT MARKDOWN MAILS ==== */
 
     /** TESTS RELATED TO TRANSPORTING MAILs */
     it('should accept mailmessage', async () => {
@@ -135,18 +147,20 @@ describe('MailerService', () => {
         .to(['hello@gmail.com', 'test@gmail.com'])
         .cc('admin@gmail.com')
         .bcc('admin_desk@gmail.com')
-        .send(sampleMailMessage);
-
-      expect(sentMailData.html).toBe('<p>The message is Hello World</p>');
+        .send(sampleMailMessage)
+        .then(() => {
+          expect(sentMailData.html).toBe('<p>The message is Hello World</p>');
+        });
 
       mailMan
         .to(['hello@gmail.com', 'test@gmail.com'])
         .from('oveeridden@gmail.com')
         .cc('admin@gmail.com')
         .bcc('admin_desk@gmail.com')
-        .send(sampleMailMessage);
-
-      expect(sentMailData.from).toBe('oveeridden@gmail.com')
+        .send(sampleMailMessage)
+        .then(() => {
+          expect(sentMailData.from).toBe('oveeridden@gmail.com');
+        });
     });
     /** ===================== */
   });

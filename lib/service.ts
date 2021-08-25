@@ -27,7 +27,7 @@ export class MailmanService {
 
   static async send(options: SendMailOptions) {
     const config = MailmanService.options;
-    const mailData: MailData = options.mail.getMailData();
+    const mailData: MailData = await options.mail.getMailData();
     const mail: Record<string, any> = {
       to: options.receipents,
       cc: options.cc,
