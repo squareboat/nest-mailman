@@ -53,7 +53,7 @@
     "mjml": "^4.7.1",
     "nodemailer": "^6.4.8",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^6.6.3"
+    "rxjs": "^7.0.0"
   },
   "peerDependencies": {
     "@nestjs/common": "^6.7.0 || ^7.0.0",
