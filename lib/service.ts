@@ -14,6 +14,7 @@ export class MailmanService {
       {
         host: options.host,
         port: options.port,
+        ignoreTLS: options.ignoreTLS,
         auth: { user: options.username, pass: options.password },
       },
       { from: options.from }

@@ -16,7 +16,7 @@ function handle() {
 
   console.log(appRoot.path);
 
-  fs.copySync("./lib/views", `${appRoot.path}/resources/views`, {
+  fs.copySync("./views", `${appRoot.path}/resources/views`, {
     overwrite: true | false,
   });
 
