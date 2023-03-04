@@ -1,26 +1,28 @@
-import * as Handlebars from 'handlebars';
-import { Attachment } from 'nodemailer/lib/mailer';
-
-import { GENERIC_MAIL, RAW_MAIL, VIEW_BASED_MAIL } from './constants';
-import { MailData, MailType } from './interfaces';
-import { MailmanService } from './service';
-import { GENERIC_VIEW } from './views/mail';
-import { getCompiledHtml } from './utils/fileCompiler';
+import { Attachment } from "nodemailer/lib/mailer";
+import { GENERIC_MAIL, RAW_MAIL, VIEW_BASED_MAIL } from "./constants";
+import {
+  MailData,
+  MailType,
+  MailmanMetaPayload,
+  MailmanPayload,
+} from "./interfaces";
+import { MailmanService } from "./service";
+import { renderToMjml } from "@faire/mjml-react/utils/renderToMjml";
+import mjml2html from "mjml";
 
 export class MailMessage {
   private mailSubject?: string;
-  private viewFile?: string;
+  private viewFile?: (payload: Record<string, any>) => JSX.Element;
   private templateString?: string;
-  private payload?: Record<string, any>;
+  private payload: MailmanPayload = {};
   private mailType: MailType;
   private compiledHtml: string;
   private attachments: Record<string, Attachment>;
 
   constructor() {
     this.attachments = {};
-    this.compiledHtml = '';
+    this.compiledHtml = "";
     this.mailType = RAW_MAIL;
-    Handlebars.registerHelper('markdown', require('helper-markdown'));
   }
 
   /**
@@ -44,10 +46,13 @@ export class MailMessage {
    * @param viewFile
    * @param payload
    */
-  view(viewFile: string, payload?: Record<string, any>): this {
+  view(
+    component: (payload: Record<string, any>) => JSX.Element,
+    payload?: Record<string, any>
+  ): this {
     this.mailType = VIEW_BASED_MAIL;
-    this.viewFile = viewFile;
-    this.payload = payload;
+    this.viewFile = component;
+    this.payload = payload || {};
     return this;
   }
 
@@ -59,7 +64,7 @@ export class MailMessage {
   raw(template: string, payload?: Record<string, any>): this {
     this.mailType = RAW_MAIL;
     this.templateString = template;
-    this.payload = payload;
+    this.payload = payload || {};
     return this;
   }
 
@@ -67,7 +72,7 @@ export class MailMessage {
    * Add attachment to the mail
    * @param greeting
    */
-  attach(filename: string, content: Omit<Attachment, 'filename'>): this {
+  attach(filename: string, content: Omit<Attachment, "filename">): this {
     this.attachments[filename] = { ...content, filename };
     return this;
   }
@@ -79,7 +84,9 @@ export class MailMessage {
    */
   greeting(greeting: string): this {
     this._setGenericMailProperties();
-    this.payload!.genericFields.push({ greeting });
+    if (this.payload.genericFields) {
+      this.payload?.genericFields.push({ greeting });
+    }
     return this;
   }
 
@@ -90,7 +97,9 @@ export class MailMessage {
    */
   line(line: string): this {
     this._setGenericMailProperties();
-    this.payload!.genericFields.push({ line });
+    if (this.payload.genericFields) {
+      this.payload?.genericFields.push({ line });
+    }
     return this;
   }
 
@@ -102,7 +111,14 @@ export class MailMessage {
    */
   action(text: string, link: string): this {
     this._setGenericMailProperties();
-    this.payload!.genericFields.push({ action: { text, link } });
+    if (this.payload.genericFields) {
+      this.payload.genericFields.push({ action: { text, link } });
+    }
+    return this;
+  }
+
+  meta(payload: MailmanMetaPayload): this {
+    this.payload.meta = payload;
     return this;
   }
 
@@ -113,7 +129,7 @@ export class MailMessage {
   private _setGenericMailProperties() {
     this.mailType = GENERIC_MAIL;
     if (!this.payload || !this.payload.genericFields) {
-      this.payload = { genericFields: [] };
+      this.payload.genericFields = [];
     }
   }
 
@@ -122,34 +138,29 @@ export class MailMessage {
    */
   private _compileTemplate(): string {
     if (this.compiledHtml) return this.compiledHtml;
+    const config = MailmanService.getConfig();
+
+    const componentData = {
+      ...this.payload,
+      _templateConfig: config.templateOptions,
+    };
 
     if (this.mailType === GENERIC_MAIL) {
-      const template = Handlebars.compile(GENERIC_VIEW);
-      this.compiledHtml = template(this.payload);
+      const component = config.baseComponent;
+
+      const { html } = mjml2html(renderToMjml(component(componentData)));
+      this.compiledHtml = html;
       return this.compiledHtml;
     }
 
     if (this.mailType === VIEW_BASED_MAIL && this.viewFile) {
-      const config = MailmanService.getConfig();
-      if (config.path) {
-        const configOptions = {
-          configPath: config.path,
-          mjml: config.mjml,
-        };
-        this.compiledHtml = getCompiledHtml(
-          this.viewFile,
-          configOptions,
-          this.payload
-        );
-        return this.compiledHtml;
-      } else {
-        throw new Error('Bad Request');
-      }
+      const component = this.viewFile;
+      const { html } = mjml2html(renderToMjml(component(componentData)));
+      this.compiledHtml = html;
+      return this.compiledHtml;
     }
 
     if (this.mailType === RAW_MAIL && this.templateString) {
-      const template = Handlebars.compile(this.templateString);
-      this.compiledHtml = template(this.payload);
       return this.compiledHtml;
     }
 
@@ -160,8 +171,8 @@ export class MailMessage {
    * Returns the maildata payload
    */
   getMailData(): MailData {
-    if (typeof (this as any).handle === 'function') {
-      (this as any)['handle']();
+    if (typeof (this as any).handle === "function") {
+      (this as any)["handle"]();
     }
 
     return {

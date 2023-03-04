@@ -1,7 +1,7 @@
-import { map } from './provider.map';
-import * as nodemailer from 'nodemailer';
-import { Injectable, Inject } from '@nestjs/common';
-import { MailmanOptions, MailData, SendMailOptions } from './interfaces';
+import { map } from "./provider.map";
+import * as nodemailer from "nodemailer";
+import { Injectable, Inject } from "@nestjs/common";
+import { MailmanOptions, MailData, SendMailOptions } from "./interfaces";
 
 @Injectable()
 export class MailmanService {

@@ -12,8 +12,10 @@
     "outDir": "./dist",
     "rootDir": "./lib",
     "skipLibCheck": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "allowJs": true,
+    "jsx": "react"
   },
   "include": ["lib/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts", "tests"]
+  "exclude": ["node_modules", "**/*.spec.ts", "tests", "views"]
 }

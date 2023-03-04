@@ -19,10 +19,7 @@ export class MailmanModule {
       module: MailmanModule,
       providers: [
         MailmanService,
-        {
-          provide: map.MAILABLE_OPTIONS,
-          useValue: options,
-        },
+        { provide: map.MAILABLE_OPTIONS, useValue: options },
       ],
     };
   }
@@ -34,7 +31,7 @@ export class MailmanModule {
     return {
       global: true,
       module: MailmanModule,
-      imports: options.imports || [],
+      imports: [],
       providers: [MailmanService, this.createStorageOptionsProvider(options)],
     };
   }

@@ -1,7 +1,28 @@
-import { ModuleMetadata, Type } from '@nestjs/common/interfaces';
-import { Attachment } from 'nodemailer/lib/mailer';
-import { MailMessage } from '../message';
-import { MJMLParsingOpts } from './mjml';
+import { ModuleMetadata, Type } from "@nestjs/common/interfaces";
+import { Attachment } from "nodemailer/lib/mailer";
+import { MailMessage } from "../message";
+import { MJMLParsingOpts } from "./mjml";
+
+export interface MailmanBaseTemplateOptions {
+  appName?: string;
+  appLogoSrc?: string;
+  socialMedia?: {
+    name: string;
+    href: string;
+  }[];
+  contactEmail?: string;
+}
+
+export interface MailmanMetaPayload {
+  title?: string;
+  preview?: string;
+}
+
+export interface MailmanPayload {
+  _templateConfig?: MailmanBaseTemplateOptions;
+  meta?: MailmanMetaPayload;
+  genericFields?: Record<string, any>[];
+}
 
 export interface MailmanOptions {
   host: string;
@@ -12,6 +33,8 @@ export interface MailmanOptions {
   replyTo?: string;
   path?: string;
   mjml?: MJMLParsingOpts;
+  baseComponent: (payload: Record<string, any>) => JSX.Element;
+  templateOptions?: MailmanBaseTemplateOptions;
 }
 
 export type CompilerOptions = {
@@ -23,7 +46,7 @@ export interface MailmanOptionsFactory {
   createMailmanOptions(): Promise<MailmanOptions> | MailmanOptions;
 }
 
-export interface MailmanAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
+export interface MailmanAsyncOptions extends Pick<ModuleMetadata, "imports"> {
   name?: string;
   useExisting?: Type<MailmanOptions>;
   useClass?: Type<MailmanOptionsFactory>;
@@ -47,4 +70,4 @@ export interface SendMailOptions {
   receipents: string | string[];
 }
 
-export type MailType = 'RAW' | 'VIEW_BASED' | 'GENERIC';
+export type MailType = "RAW" | "VIEW_BASED" | "GENERIC";

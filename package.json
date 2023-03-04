@@ -1,6 +1,6 @@
 {
   "name": "@squareboat/nest-mailman",
-  "version": "0.2.1",
+  "version": "1.0.0-beta",
   "description": "📮 The mailer package for your NestJS Applications",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -24,6 +24,7 @@
   "private": false,
   "license": "MIT",
   "scripts": {
+    "postinstall": "node copymailman.js",
     "build": "rm -rf dist && tsc -p tsconfig.json",
     "format": "prettier --write \"**/*.ts\"",
     "lint": "eslint 'lib/**/*.ts' --fix",
@@ -42,16 +43,21 @@
     "@nestjs/testing": "^7.4.4",
     "@types/mjml": "^4.0.4",
     "@types/nodemailer": "^6.4.0",
+    "@types/react": "^18.0.28",
     "jest": "^26.6.1",
     "nodemailer-mock": "^1.5.3",
     "ts-jest": "^26.4.2",
     "typescript": "^3.9.7"
   },
   "dependencies": {
+    "@faire/mjml-react": "^3.1.2",
+    "app-root-path": "^3.1.0",
+    "fs-extra": "^11.1.0",
     "handlebars": "^4.7.6",
     "helper-markdown": "^1.0.0",
     "mjml": "^4.7.1",
     "nodemailer": "^6.4.8",
+    "picocolors": "^1.0.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.6.3"
   },
