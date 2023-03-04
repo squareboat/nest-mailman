@@ -30,6 +30,7 @@ export interface MailmanOptions {
   username: string;
   password: string;
   from: string;
+  ignoreTLS?: boolean;
   replyTo?: string;
   path?: string;
   mjml?: MJMLParsingOpts;
