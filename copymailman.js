@@ -14,8 +14,6 @@ function handle() {
     return;
   }
 
-  console.log(appRoot.path);
-
   fs.copySync("./views", `${appRoot.path}/resources/views`, {
     overwrite: true | false,
   });
