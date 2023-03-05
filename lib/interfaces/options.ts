@@ -34,8 +34,10 @@ export interface MailmanOptions {
   replyTo?: string;
   path?: string;
   mjml?: MJMLParsingOpts;
-  baseComponent: (payload: Record<string, any>) => JSX.Element;
-  templateOptions?: MailmanBaseTemplateOptions;
+  templateConfig: {
+    baseComponent: (payload: Record<string, any>) => JSX.Element;
+    templateOptions?: MailmanBaseTemplateOptions;
+  };
 }
 
 export type CompilerOptions = {

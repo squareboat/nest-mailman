@@ -156,20 +156,33 @@ export class MailMessage {
 
     const componentData = {
       ...this.payload,
-      _templateConfig: config.templateOptions,
+      _templateConfig: config.templateConfig.templateOptions,
     };
 
     if (this.mailType === GENERIC_MAIL) {
-      const component = config.baseComponent;
+      const component = config.templateConfig?.baseComponent;
 
-      const { html } = mjml2html(renderToMjml(component(componentData)));
+      if (!component) {
+        throw new Error(
+          "BaseComponent not found for generic view, please check if you have set the baseComponent attribute in config correctly."
+        );
+      }
+
+      const { html } = mjml2html(
+        renderToMjml(component(componentData)),
+        config.mjml
+      );
       this.compiledHtml = html;
       return this.compiledHtml;
     }
 
     if (this.mailType === VIEW_BASED_MAIL && this.viewFile) {
       const component = this.viewFile;
-      const { html } = mjml2html(renderToMjml(component(componentData)));
+      const { html } = mjml2html(
+        renderToMjml(component(componentData)),
+        config.mjml
+      );
+
       this.compiledHtml = html;
       return this.compiledHtml;
     }
