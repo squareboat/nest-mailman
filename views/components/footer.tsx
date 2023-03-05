@@ -61,7 +61,7 @@ export const MailmanFooter = (payload: Record<string, any>) => {
         <MjmlSection padding={0}>
           <MjmlColumn>
             {contactEmail && (
-              <MjmlText align="center">Contact Us: support@atadel.ca</MjmlText>
+              <MjmlText align="center">Contact Us: {contactEmail}</MjmlText>
             )}
 
             <MjmlText align="center">

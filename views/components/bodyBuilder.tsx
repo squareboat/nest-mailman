@@ -4,6 +4,7 @@ import { MailmanDivider } from "./divider";
 import { Greeting } from "./greeting";
 import { TextLine } from "./text";
 import React from "react";
+import { MailmanTable } from "./table";
 
 export const MailmanBodyBuilder = (payload: Record<string, any>) => {
   return (
@@ -34,6 +35,10 @@ const ComponentView = (payload: Record<string, any>) => {
 
   if (payload.action) {
     return <MailmanButton value={payload.action} />;
+  }
+
+  if (payload.table) {
+    return <MailmanTable value={payload.table} />;
   }
 
   return <></>;

@@ -2,7 +2,6 @@ import { MjmlButton } from "@faire/mjml-react";
 import React from "react";
 
 export const MailmanButton = (payload: Record<string, any>) => {
-  console.log(payload);
   return (
     <>
       <MjmlButton

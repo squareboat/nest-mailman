@@ -117,6 +117,20 @@ export class MailMessage {
     return this;
   }
 
+  /**
+   * ==> Generic Template Method <==
+   * Use this method for adding a table to the generic mail
+   * @param data
+   */
+  table(data: Record<string, any>[]): this {
+    this._setGenericMailProperties();
+    if (this.payload.genericFields) {
+      this.payload.genericFields.push({ table: data });
+    }
+
+    return this;
+  }
+
   meta(payload: MailmanMetaPayload): this {
     this.payload.meta = payload;
     return this;

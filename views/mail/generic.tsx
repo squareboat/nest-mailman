@@ -7,8 +7,6 @@ import { MailmanBodyBuilder } from "../components/bodyBuilder";
 import React from "react";
 
 export const GenericMail = (payload: Record<string, any>) => {
-  console.log(payload);
-
   return (
     <Mjml>
       <MailmanHead
