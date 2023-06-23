@@ -31,6 +31,12 @@
   text-align: left;
 }
 
+.styled-table th {
+  background-color: #0275d8;
+  color: #ffffff;
+  text-align: left;
+}
+
 .styled-table th,
 .styled-table td {
   padding: 12px 15px;

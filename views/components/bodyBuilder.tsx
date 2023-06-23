@@ -5,6 +5,7 @@ import { Greeting } from "./greeting";
 import { TextLine } from "./text";
 import React from "react";
 import { MailmanTable } from "./table";
+import { RawHtml } from "./html";
 
 export const MailmanBodyBuilder = (payload: Record<string, any>) => {
   return (
@@ -33,12 +34,16 @@ const ComponentView = (payload: Record<string, any>) => {
     return <MailmanDivider />;
   }
 
+  if (payload.html) {
+    return <RawHtml value={payload.html} />;
+  }
+
   if (payload.action) {
     return <MailmanButton value={payload.action} />;
   }
 
   if (payload.table) {
-    return <MailmanTable value={payload.table} />;
+    return <MailmanTable value={payload.table} header={payload.showHeading} vertical={payload.vertical} />;
   }
 
   return <></>;

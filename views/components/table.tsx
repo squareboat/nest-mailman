@@ -1,10 +1,8 @@
 import {
   MjmlColumn,
   MjmlSection,
-  MjmlTable,
-  MjmlText,
+  MjmlTable
 } from "@faire/mjml-react";
-import { head } from "lodash";
 import React from "react";
 
 function toTitleCase(str) {
@@ -20,31 +18,62 @@ function toTitleCase(str) {
 export const MailmanTable = (payload: Record<string, any>) => {
   const headings = Object.keys(payload.value[0]);
 
-  return (
-    <MjmlSection padding={0}>
-      <MjmlColumn>
-        <MjmlTable className="styled-table">
-          <thead>
-            <tr>
-              {headings.map((h) => (
-                <th>{toTitleCase(h)}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {payload.value.map((obj) => {
-              const values = Object.values(obj) as string[];
-              return (
-                <tr>
-                  {values.map((v) => (
-                    <td>{v}</td>
-                  ))}
-                </tr>
-              );
-            })}
-          </tbody>
-        </MjmlTable>
-      </MjmlColumn>
-    </MjmlSection>
-  );
+  const tableHeader = () => {
+    return (
+      <thead>
+        <tr>
+          {headings.map((h) => (
+            <th>{toTitleCase(h)}</th>
+          ))}
+        </tr>
+      </thead>
+    );
+  };
+  if (payload.vertical) {
+    return (
+      <>
+        {payload.value.map((obj) => {
+          const values = Object.values(obj) as string[];
+          return (
+            <MjmlSection padding={0}>
+              <MjmlColumn>
+                <MjmlTable className="styled-table">
+                  <tbody>
+                    {values.map((v, index) => (
+                      <tr>
+                        <th>{toTitleCase(headings[index])}</th>
+                        <td>{v}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </MjmlTable>
+              </MjmlColumn>
+            </MjmlSection>
+          );
+        })}
+      </>
+    );
+  } else {
+    return (
+      <MjmlSection padding={0}>
+        <MjmlColumn>
+          <MjmlTable className="styled-table">
+            {payload.heading && tableHeader()}
+            <tbody>
+              {payload.value.map((obj) => {
+                const values = Object.values(obj) as string[];
+                return (
+                  <tr>
+                    {values.map((v) => (
+                      <td>{v}</td>
+                    ))}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </MjmlTable>
+        </MjmlColumn>
+      </MjmlSection>
+    );
+  }
 };

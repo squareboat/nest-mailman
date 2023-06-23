@@ -103,6 +103,14 @@ export class MailMessage {
     return this;
   }
 
+  html(html: string): this {
+    this._setGenericMailProperties();
+    if (this.payload.genericFields) {
+      this.payload?.genericFields.push({ html });
+    }
+    return this;
+  }
+
   /**
    * ==> Generic Template Method <==
    * Use this method for adding a url action to the generic mail
@@ -122,10 +130,10 @@ export class MailMessage {
    * Use this method for adding a table to the generic mail
    * @param data
    */
-  table(data: Record<string, any>[]): this {
+  table(data: Record<string, any>[], showHeading = true, vertical = false): this {
     this._setGenericMailProperties();
     if (this.payload.genericFields) {
-      this.payload.genericFields.push({ table: data });
+      this.payload.genericFields.push({ table: data, showHeading, vertical: vertical });
     }
 
     return this;
