@@ -159,7 +159,7 @@ export class MailMessage {
   /**
    * Method to compile templates
    */
-  private _compileTemplate(): string {
+  private async _compileTemplate(): Promise<string> {
     if (this.compiledHtml) return this.compiledHtml;
     const config = MailmanService.getConfig();
 
@@ -177,7 +177,7 @@ export class MailMessage {
         );
       }
 
-      const { html } = mjml2html(
+      const { html } = await mjml2html(
         renderToMjml(component(componentData)),
         config.mjml
       );
@@ -187,7 +187,7 @@ export class MailMessage {
 
     if (this.mailType === VIEW_BASED_MAIL && this.viewFile) {
       const component = this.viewFile;
-      const { html } = mjml2html(
+      const { html } = await mjml2html(
         renderToMjml(component(componentData)),
         config.mjml
       );
@@ -204,25 +204,28 @@ export class MailMessage {
   }
 
   /**
-   * Returns the maildata payload
+   * Returns the maildata payload.
+   * Async since 2.0.0 (mjml 5 renders asynchronously).
    */
-  getMailData(): MailData {
+  async getMailData(): Promise<MailData> {
     if (typeof (this as any).handle === "function") {
       (this as any)["handle"]();
     }
 
+    const subject = this.mailSubject;
     return {
-      subject: this.mailSubject,
-      html: this._compileTemplate(),
+      subject,
+      html: await this._compileTemplate(),
       attachments: Object.values(this.attachments),
     };
   }
 
   /**
    * Render the email template.
-   * Returns the complete html of the mail.
+   * Resolves to the complete html of the mail.
+   * Async since 2.0.0 (mjml 5 renders asynchronously).
    */
-  render(): string {
+  render(): Promise<string> {
     return this._compileTemplate();
   }
 }

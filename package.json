@@ -41,17 +41,17 @@
   "devDependencies": {
     "@nestjs/common": "^12.3.2",
     "@nestjs/core": "^12.3.2",
-    "@types/mjml": "^4.18.2",
+    "@types/mjml": "^5.4.2",
     "@types/react": "^19.3.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
     "typescript": "^6.0.3"
   },
   "dependencies": {
-    "@faire/mjml-react": "^3.5.4",
+    "@faire/mjml-react": "^4.0.1",
     "app-root-path": "^3.1.0",
     "fs-extra": "^11.4.1",
-    "mjml": "^4.18.0",
+    "mjml": "^5.4.1",
     "nodemailer": "^10.3.1",
     "picocolors": "^1.1.1"
   },
