@@ -6,7 +6,21 @@ const picocolors = require("picocolors");
 // Copies the starter mail templates into <app>/resources/views on install.
 // It must never fail the install (read-only or non-root Docker images, CI caches),
 // so any error only prints how to copy the templates by hand.
+// Only for apps that depend on nest-mailman themselves. When it is installed
+// through another package (e.g. nest-eyewitness), copying .tsx files into the
+// app would break builds that don't use JSX.
+function isDirectDependency() {
+  try {
+    const pkg = fs.readJsonSync(path.join(appRoot.path, "package.json"));
+    const name = require("./package.json").name;
+    return !!((pkg.dependencies || {})[name] || (pkg.devDependencies || {})[name]);
+  } catch (e) {
+    return false;
+  }
+}
+
 function handle() {
+  if (!isDirectDependency()) return;
   const source = path.join(__dirname, "views");
   const target = path.join(appRoot.path, "resources", "views");
   if (fs.existsSync(target)) {
@@ -24,4 +38,8 @@ function handle() {
   }
 }
 
-handle();
+try {
+  handle();
+} catch (e) {
+  // never fail the install
+}

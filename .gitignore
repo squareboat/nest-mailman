@@ -17,3 +17,5 @@ npm-debug.log
 
 # dist
 dist
+# created by the postinstall when installing in this repo
+/resources

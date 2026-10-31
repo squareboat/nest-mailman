@@ -58,9 +58,9 @@ export class MailMessage {
   }
 
   /**
-   * Define the template string to be used for the mail
+   * Define the HTML to be sent as the mail body, as is.
    * @param template
-   * @param payload
+   * @param payload not used: the HTML is not a template and is sent unchanged
    */
   raw(template: string, payload?: Record<string, any>): this {
     this.mailType = RAW_MAIL;
@@ -210,7 +210,8 @@ export class MailMessage {
    */
   async getMailData(): Promise<MailData> {
     if (typeof (this as any).handle === "function") {
-      (this as any)["handle"]();
+      // awaited, so an async handle() sets subject and body before they are read
+      await (this as any)["handle"]();
     }
 
     const subject = this.mailSubject;
