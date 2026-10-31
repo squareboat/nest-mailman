@@ -11,6 +11,9 @@ tsconfig.json
 .github
 CONTRIBUTING.MD
 
+# views copied into the repo by the postinstall script (shipped by mistake in 1.0.6)
+/resources
+
 # misc
 .commitlintrc.json
 .release-it.json

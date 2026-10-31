@@ -9,10 +9,11 @@ import {
 import { MailmanService } from "./service";
 import { renderToMjml } from "@faire/mjml-react/utils/renderToMjml";
 import mjml2html from "mjml";
+import type { ReactElement } from "react";
 
 export class MailMessage {
   private mailSubject?: string;
-  private viewFile?: (payload: Record<string, any>) => JSX.Element;
+  private viewFile?: (payload: Record<string, any>) => ReactElement;
   private templateString?: string;
   private payload: MailmanPayload = {};
   private mailType: MailType;
@@ -47,7 +48,7 @@ export class MailMessage {
    * @param payload
    */
   view(
-    component: (payload: Record<string, any>) => JSX.Element,
+    component: (payload: Record<string, any>) => ReactElement,
     payload?: Record<string, any>
   ): this {
     this.mailType = VIEW_BASED_MAIL;
