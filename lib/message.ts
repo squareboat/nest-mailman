@@ -9,10 +9,11 @@ import {
 import { MailmanService } from "./service";
 import { renderToMjml } from "@faire/mjml-react/utils/renderToMjml";
 import mjml2html from "mjml";
+import type { ReactElement } from "react";
 
 export class MailMessage {
   private mailSubject?: string;
-  private viewFile?: (payload: Record<string, any>) => JSX.Element;
+  private viewFile?: (payload: Record<string, any>) => ReactElement;
   private templateString?: string;
   private payload: MailmanPayload = {};
   private mailType: MailType;
@@ -47,7 +48,7 @@ export class MailMessage {
    * @param payload
    */
   view(
-    component: (payload: Record<string, any>) => JSX.Element,
+    component: (payload: Record<string, any>) => ReactElement,
     payload?: Record<string, any>
   ): this {
     this.mailType = VIEW_BASED_MAIL;
@@ -57,9 +58,9 @@ export class MailMessage {
   }
 
   /**
-   * Define the template string to be used for the mail
+   * Define the HTML to be sent as the mail body, as is.
    * @param template
-   * @param payload
+   * @param payload not used: the HTML is not a template and is sent unchanged
    */
   raw(template: string, payload?: Record<string, any>): this {
     this.mailType = RAW_MAIL;
@@ -158,7 +159,7 @@ export class MailMessage {
   /**
    * Method to compile templates
    */
-  private _compileTemplate(): string {
+  private async _compileTemplate(): Promise<string> {
     if (this.compiledHtml) return this.compiledHtml;
     const config = MailmanService.getConfig();
 
@@ -176,7 +177,7 @@ export class MailMessage {
         );
       }
 
-      const { html } = mjml2html(
+      const { html } = await mjml2html(
         renderToMjml(component(componentData)),
         config.mjml
       );
@@ -186,7 +187,7 @@ export class MailMessage {
 
     if (this.mailType === VIEW_BASED_MAIL && this.viewFile) {
       const component = this.viewFile;
-      const { html } = mjml2html(
+      const { html } = await mjml2html(
         renderToMjml(component(componentData)),
         config.mjml
       );
@@ -196,6 +197,7 @@ export class MailMessage {
     }
 
     if (this.mailType === RAW_MAIL && this.templateString) {
+      this.compiledHtml = this.templateString;
       return this.compiledHtml;
     }
 
@@ -203,25 +205,29 @@ export class MailMessage {
   }
 
   /**
-   * Returns the maildata payload
+   * Returns the maildata payload.
+   * Async since 2.0.0 (mjml 5 renders asynchronously).
    */
-  getMailData(): MailData {
+  async getMailData(): Promise<MailData> {
     if (typeof (this as any).handle === "function") {
-      (this as any)["handle"]();
+      // awaited, so an async handle() sets subject and body before they are read
+      await (this as any)["handle"]();
     }
 
+    const subject = this.mailSubject;
     return {
-      subject: this.mailSubject,
-      html: this._compileTemplate(),
+      subject,
+      html: await this._compileTemplate(),
       attachments: Object.values(this.attachments),
     };
   }
 
   /**
    * Render the email template.
-   * Returns the complete html of the mail.
+   * Resolves to the complete html of the mail.
+   * Async since 2.0.0 (mjml 5 renders asynchronously).
    */
-  render(): string {
+  render(): Promise<string> {
     return this._compileTemplate();
   }
 }

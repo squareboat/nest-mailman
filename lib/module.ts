@@ -31,8 +31,12 @@ export class MailmanModule {
     return {
       global: true,
       module: MailmanModule,
-      imports: [],
-      providers: [MailmanService, this.createStorageOptionsProvider(options)],
+      imports: [...(options.imports || [])],
+      providers: [
+        MailmanService,
+        this.createStorageOptionsProvider(options),
+        ...(options.useClass ? [{ provide: options.useClass, useClass: options.useClass }] : []),
+      ],
     };
   }
 
@@ -48,7 +52,7 @@ export class MailmanModule {
     }
 
     const inject = [
-      (options.useClass || options.useExisting) as Type<MailmanOptions>,
+      (options.useClass || options.useExisting) as Type<MailmanOptionsFactory>,
     ];
 
     return {
