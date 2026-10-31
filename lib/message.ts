@@ -197,6 +197,7 @@ export class MailMessage {
     }
 
     if (this.mailType === RAW_MAIL && this.templateString) {
+      this.compiledHtml = this.templateString;
       return this.compiledHtml;
     }
 
