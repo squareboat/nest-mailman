@@ -52,7 +52,7 @@ export interface MailmanOptionsFactory {
 
 export interface MailmanAsyncOptions extends Pick<ModuleMetadata, "imports"> {
   name?: string;
-  useExisting?: Type<MailmanOptions>;
+  useExisting?: Type<MailmanOptionsFactory>;
   useClass?: Type<MailmanOptionsFactory>;
   useFactory?: (...args: any[]) => Promise<MailmanOptions> | MailmanOptions;
   inject?: any[];
